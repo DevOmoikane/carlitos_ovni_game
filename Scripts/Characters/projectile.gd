@@ -90,24 +90,16 @@ func _physics_process(delta):
 	position.z -= speed * delta
 
 func _on_collision(collider):
-	# Check if collided with enemy
 	if collider.is_in_group("enemy"):
-		# Call destroy method on enemy
-		#if collider.has_method("destroy"):
-			#collider.destroy()
-		#else:
-			#collider.queue_free()
-		
-		# Create hit effect
+		if collider.has_method("take_damage"):
+			collider.take_damage(damage)
+		else:
+			collider.queue_free()
 		create_hit_effect(collider.global_position)
-		
-		# Destroy projectile
 		queue_free()
-	
-	# Destroy on collision with anything else (optional)
 	elif not collider.is_in_group("player"):
 		create_hit_effect(global_position)
-		#queue_free()
+		queue_free()
 		
 func _on_area_entered(area):
 	print("hitted " + area)

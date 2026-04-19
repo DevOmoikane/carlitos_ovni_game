@@ -70,6 +70,11 @@ func update_ai(player_position: Vector3, delta):
 	# Move forward
 	position.z += speed * delta
 
+func take_damage(amount: int):
+	health -= amount
+	if health <= 0:
+		destroy()
+
 func destroy():
 	# Create explosion effect
 	create_explosion()
