@@ -271,6 +271,23 @@ func shoot():
 	
 	# Play shooting effect
 	create_shoot_effect()
+	create_bubble_effect("pewpew.png", 0.3)
+
+func create_bubble_effect(image_path: String, duration: float):
+	var texture = load("res://Assets/Textures/" + image_path)
+	if not texture:
+		return
+	
+	var sprite = Sprite3D.new()
+	sprite.texture = texture
+	sprite.modulate = Color(1, 1, 1, 1)
+	sprite.position = Vector3(global_position.x + projectile_spawn_offset.x, global_position.y + projectile_spawn_offset.y, global_position.z + projectile_spawn_offset.z)
+	sprite.scale = Vector3(0.4, 0.4, 0.4)
+	
+	get_tree().current_scene.add_child(sprite)
+	
+	var timer = get_tree().create_timer(duration)
+	timer.timeout.connect(func(): sprite.queue_free())
 
 func create_shoot_effect():
 	# Create muzzle flash effect

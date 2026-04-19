@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 # Enemy settings
 @export var speed: float = 5.0
-@export var health: int = 5
+@export var health: int = 3
 @export var score_value: int = 100
 
 # Movement pattern
@@ -73,18 +73,30 @@ func update_ai(player_position: Vector3, delta):
 func take_damage(amount: int):
 	health -= amount
 	if health <= 0:
+		if has_signal("destroyed"):
+			emit_signal("destroyed")
 		destroy()
 
 func destroy():
-	# Create explosion effect
 	create_explosion()
-	
-	# Emit destroyed signal (for score)
-	if has_signal("destroyed"):
-		destroyed.emit(self)
-	
-	# Remove enemy
+	create_bubble_effect("boom.png", 0.75)
 	queue_free()
+
+func create_bubble_effect(image_path: String, duration: float):
+	var texture = load("res://Assets/Textures/" + image_path)
+	if not texture:
+		return
+	
+	var sprite = Sprite3D.new()
+	sprite.texture = texture
+	sprite.modulate = Color(1, 1, 1, 1)
+	sprite.position = Vector3(global_position.x, global_position.y, global_position.z)
+	sprite.scale = Vector3(0.7, 0.7, 0.7)
+	
+	get_tree().current_scene.add_child(sprite)
+	
+	var timer = get_tree().create_timer(duration)
+	timer.timeout.connect(func(): sprite.queue_free())
 
 func create_explosion():
 	var explosion = GPUParticles3D.new()
