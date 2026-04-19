@@ -95,6 +95,7 @@ func create_explosion():
 	particle_material.initial_velocity_max = 8.0
 	particle_material.scale_min = 0.2
 	particle_material.scale_max = 0.5
+	particle_material.gravity = Vector3(0.0, 0.0, 0.0)
 	
 	var gradient = Gradient.new()
 	gradient.add_point(0.0, Color.YELLOW)
