@@ -105,16 +105,20 @@ func create_explosion():
 	color_ramp.gradient = gradient
 	particle_material.color_ramp = color_ramp
 	
+	var mesh = BoxMesh.new()
+	mesh.size = Vector3(0.2, 0.2, 0.2)
+	
 	explosion.process_material = particle_material
+	explosion.draw_pass_1 = mesh
 	explosion.emitting = true
 	explosion.amount = 500
 	explosion.lifetime = 0.8
 	explosion.one_shot = true
 	explosion.position = global_position
 	
-	get_tree().root.add_child(explosion)
+	get_tree().current_scene.add_child(explosion)
 	
-	await get_tree().create_timer(1.8).timeout
+	await get_tree().create_timer(1.0).timeout
 	explosion.queue_free()
 
 signal destroyed

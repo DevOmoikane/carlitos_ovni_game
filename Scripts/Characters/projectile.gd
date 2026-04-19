@@ -106,7 +106,6 @@ func _on_area_entered(area):
 	pass
 			
 func create_hit_effect(position: Vector3):
-	# Create a simple explosion effect
 	var explosion = GPUParticles3D.new()
 	var particle_material = ParticleProcessMaterial.new()
 	particle_material.direction = Vector3(0, 1, 0)
@@ -126,15 +125,18 @@ func create_hit_effect(position: Vector3):
 	color_ramp.gradient = gradient
 	particle_material.color_ramp = color_ramp
 	
+	var mesh = BoxMesh.new()
+	mesh.size = Vector3(0.1, 0.1, 0.1)
+	
 	explosion.process_material = particle_material
+	explosion.draw_pass_1 = mesh
 	explosion.emitting = true
 	explosion.amount = 30
 	explosion.lifetime = 0.5
 	explosion.one_shot = true
 	explosion.position = position
 	
-	get_tree().root.add_child(explosion)
+	get_tree().current_scene.add_child(explosion)
 	
-	# Remove explosion after it finishes
-	await get_tree().create_timer(1.5).timeout
+	await get_tree().create_timer(0.6).timeout
 	explosion.queue_free()
