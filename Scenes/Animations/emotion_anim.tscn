@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://dhl8vve2xyrxf"]
+
+[ext_resource type="Script" uid="uid://5ewidhkhaw2" path="res://Scripts/Animations/emotion_anim.gd" id="1_6r8gs"]
+[ext_resource type="Texture2D" uid="uid://b5cr7rcwddvha" path="res://Assets/Graphics/cloud.png" id="1_7lgn2"]
+
+[sub_resource type="Animation" id="Animation_6r8gs"]
+length = 1.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CloudBackground:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.20424096, 0.30158946, 0.40275553, 0.50201285, 0.5993613, 0.7005274, 0.8016935, 0.90285957, 0.9982993, 1.1032829),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+}
+
+[sub_resource type="Animation" id="Animation_oqw60"]
+resource_name = "animate"
+length = 1.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CloudBackground:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.10074893, 0.20052911, 0.30079368, 0.4000895, 0.5008384, 0.5996499, 0.70088315, 0.80066335, 0.90044355, 1.0007081, 1.1004883),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_41cjc"]
+_data = {
+&"RESET": SubResource("Animation_6r8gs"),
+&"animate": SubResource("Animation_oqw60")
+}
+
+[node name="EmotionAnim" type="Node2D" unique_id=1147135798]
+script = ExtResource("1_6r8gs")
+
+[node name="CloudBackground" type="Sprite2D" parent="." unique_id=199056987]
+texture = ExtResource("1_7lgn2")
+hframes = 4
+vframes = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1898079031]
+libraries/ = SubResource("AnimationLibrary_41cjc")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1417037515]
+position = Vector2(8, 23)
+scale = Vector2(0.37, 0.37)
+hframes = 4
+vframes = 2
+frame = 7

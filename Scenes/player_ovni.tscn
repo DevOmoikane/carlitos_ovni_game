@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://dclyaxdhrarcy"]
+
+[ext_resource type="ArrayMesh" uid="uid://bg2b74rsmw4qn" path="res://Assets/Models/carlitos_ovni_remesh_02.obj" id="1_peptr"]
+[ext_resource type="Script" uid="uid://dh1i4ioqmjqv7" path="res://Scripts/Characters/player_ovni.gd" id="1_xlg88"]
+[ext_resource type="Texture2D" uid="uid://cut57c8m61seq" path="res://Assets/Textures/carlitos_ovni_remesh_tex.png" id="2_xlg88"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ptpcq"]
+albedo_texture = ExtResource("2_xlg88")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2h4j0"]
+radius = 0.30910185
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xlg88"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_qcola"]
+radius = 0.03
+height = 0.06
+radial_segments = 16
+rings = 8
+
+[node name="Player" type="CharacterBody3D" unique_id=1333983720]
+script = ExtResource("1_xlg88")
+
+[node name="mesh" type="MeshInstance3D" parent="." unique_id=1436737624]
+transform = Transform3D(-0.9761598, 0, 0.21705301, 0, 1, 0, -0.21705301, 0, -0.9761598, -0.011, 0, 0)
+mesh = ExtResource("1_peptr")
+surface_material_override/0 = SubResource("StandardMaterial3D_ptpcq")
+
+[node name="LeftLight" type="OmniLight3D" parent="mesh" unique_id=1825295761]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 0.51747787, -0.1, -0.12546046)
+light_color = Color(0.886008, 0, 0.17782786, 1)
+
+[node name="RightLight" type="OmniLight3D" parent="mesh" unique_id=1915444138]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -0.52318907, -0.1803666, 0.11633318)
+light_color = Color(0.1300137, 0.30024454, 1, 1)
+
+[node name="collisionShape" type="CollisionShape3D" parent="." unique_id=617860835]
+shape = SubResource("SphereShape3D_2h4j0")
+
+[node name="BlinkTimer" type="Timer" parent="." unique_id=1974746702]
+
+[node name="EngineParticles" type="GPUParticles3D" parent="." unique_id=1871085745]
+transform = Transform3D(-0.97615993, 0, 0.21705304, 0, 1, 0, -0.21705304, 0, -0.97615993, -0.011, -0.40832058, -0.003916681)
+amount = 16
+process_material = SubResource("ParticleProcessMaterial_xlg88")
+draw_pass_1 = SubResource("SphereMesh_qcola")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=582018506]
+
+[node name="collisionShape" type="CollisionShape3D" parent="Area3D" unique_id=175431691]
+shape = SubResource("SphereShape3D_2h4j0")
