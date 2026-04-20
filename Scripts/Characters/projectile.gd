@@ -100,10 +100,6 @@ func _on_collision(collider):
 	elif not collider.is_in_group("player"):
 		create_hit_effect(global_position)
 		queue_free()
-		
-func _on_area_entered(area):
-	print("hitted " + area)
-	pass
 			
 func create_hit_effect(position: Vector3):
 	var explosion = GPUParticles3D.new()

@@ -55,6 +55,7 @@ var mouse_stop_timer: float = 0.0
 @onready var left_light: OmniLight3D = $mesh/LeftLight
 @onready var right_light: OmniLight3D = $mesh/RightLight
 @onready var blink_timer: Timer = $BlinkTimer
+@onready var collision_area: Area3D = $Area3D
 
 # Particle system references
 var particle_material: ParticleProcessMaterial
@@ -63,6 +64,7 @@ func _ready():
 	print("Spaceship ready with effects!")
 	
 	add_to_group("player")
+	#collision_area.add_to_group("player")
 	
 	# Setup particle system
 	setup_particle_system()

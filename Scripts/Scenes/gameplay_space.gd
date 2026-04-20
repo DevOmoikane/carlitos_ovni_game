@@ -21,6 +21,7 @@ extends Node3D
 
 # Game state
 var score: int = 0
+var health: int = 300
 var enemies: Array = []
 var objects: Array = []
 var spawn_timer: Timer
@@ -101,7 +102,7 @@ func _spawn_enemy():
 		return
 	
 	var enemy = enemy_scene.instantiate()
-	var random_x = randf_range(-3, 3)
+	var random_x = randf_range(-4.2, 4.2)
 	var spawn_z = -50.0
 	
 	enemy.position = Vector3(random_x, 0, spawn_z)
@@ -112,6 +113,8 @@ func _spawn_enemy():
 	# Connect destroyed signal
 	if enemy.has_signal("destroyed"):
 		enemy.destroyed.connect(_on_enemy_destroyed.bind(enemy))
+	if enemy.has_signal("hit_player"):
+		enemy.hit_player.connect(_on_enemy_hit_player.bind(enemy))
 
 func _spawn_object():
 	if out_state:
@@ -155,6 +158,11 @@ func _on_enemy_destroyed(enemy):
 	# Optional: Play sound effect
 	# $AudioStreamPlayer3D.play()
 
+func _on_enemy_hit_player(enemy):
+	health -= 20
+	if health <= 0:
+		print("died")
+		
 func update_score_display():
 	# Update UI if you have one
 	if has_node("UI/ScoreLabel"):

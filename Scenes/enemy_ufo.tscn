@@ -6,9 +6,7 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_l2q2e"]
 radius = 0.7036463
 
-[node name="EnemyUfo" type="CharacterBody3D" unique_id=1213247513]
-axis_lock_linear_y = true
-collision_layer = 2
+[node name="EnemyUfo" type="Area3D" unique_id=1626126909]
 script = ExtResource("1_l2q2e")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=266109925]
@@ -19,9 +17,4 @@ mesh = ExtResource("1_o0oid")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1513476, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1028601045]
-shape = SubResource("SphereShape3D_l2q2e")
-
-[node name="DetectionArea" type="Area3D" parent="." unique_id=1218229909]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea" unique_id=1607009982]
 shape = SubResource("SphereShape3D_l2q2e")

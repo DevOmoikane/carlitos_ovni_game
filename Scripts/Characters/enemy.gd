@@ -1,4 +1,4 @@
-extends CharacterBody3D
+extends Area3D
 
 # Enemy settings
 @export var speed: float = 5.0
@@ -12,7 +12,6 @@ extends CharacterBody3D
 # References
 @onready var mesh_instance: MeshInstance3D = $MeshInstance3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
-@onready var area_detection: Area3D = $DetectionArea
 
 var start_position: Vector3
 var time: float = 0.0
@@ -23,21 +22,11 @@ func _ready():
 	# Add to enemy group for collision detection
 	add_to_group("enemy")
 	
-	# Setup detection area if not exists
-	if not area_detection:
-		setup_detection_area()
-	
 	# Setup visual effects
 	#setup_enemy_visuals()
-
-func setup_detection_area():
-	area_detection = Area3D.new()
-	var collision = CollisionShape3D.new()
-	var sphere_shape = SphereShape3D.new()
-	sphere_shape.radius = 0.343
-	collision.shape = sphere_shape
-	area_detection.add_child(collision)
-	add_child(area_detection)
+	
+	body_entered.connect(_on_collision)
+	area_entered.connect(_on_collision)
 
 func setup_enemy_visuals():
 	# Add a simple red material to enemy
@@ -134,10 +123,12 @@ func create_explosion():
 	await get_tree().create_timer(1.0).timeout
 	explosion.queue_free()
 
+func _on_collision(collider):
+	print("collider: ", collider)
+	if collider.is_in_group("player"):
+		if has_signal("hit_player"):
+			emit_signal("hit_player")
+		queue_free()
+		
 signal destroyed
-
-func _on_area_entered(area):
-	if area.is_in_group("projectile"):
-		health -= 1
-		if health <= 0:
-			destroy()
+signal hit_player
