@@ -11,9 +11,14 @@ config_version=5
 [application]
 
 config/name="Mini Game 001"
-run/main_scene="uid://nkm0pdkrc384"
+run/main_scene="uid://tep0a5rupqhq"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/resizable=false
+window/stretch/mode="canvas_items"
 
 [dotnet]
 

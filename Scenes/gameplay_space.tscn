@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://dclyaxdhrarcy" path="res://Scenes/player_ovni.tscn" id="2_nvf8l"]
 [ext_resource type="PackedScene" uid="uid://sg0ctlcm0ojf" path="res://Scenes/enemy_ufo.tscn" id="2_ptpcq"]
 [ext_resource type="PackedScene" uid="uid://cmkbmpffeq1ca" path="res://Scenes/projectile.tscn" id="3_nvf8l"]
+[ext_resource type="ArrayMesh" uid="uid://4o7me02q8qtp" path="res://Assets/Models/earth.obj" id="5_ubs2n"]
+[ext_resource type="Texture2D" uid="uid://dnuvabyfa8pby" path="res://Assets/Models/earth_diff.png" id="6_10nf7"]
 
 [sub_resource type="Environment" id="Environment_3fv7f"]
 background_mode = 1
@@ -30,11 +32,13 @@ hue_variation_max = 0.059999976
 radius = 0.1
 height = 0.2
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8o2vv"]
+albedo_texture = ExtResource("6_10nf7")
+
 [node name="GameplaySpace" type="Node3D" unique_id=305460067]
 script = ExtResource("1_x7ko8")
+earth_scale_rate = 0.1
 enemy_scene = ExtResource("2_ptpcq")
-powerup_scene = ExtResource("2_nvf8l")
-obstacle_scene = ExtResource("2_nvf8l")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1214186080]
 transform = Transform3D(1, 0, 0, 0, 0.9019984, 0.43173945, 0, -0.43173945, 0.9019984, 0, 2.8306577, 0)
@@ -51,3 +55,8 @@ lifetime = 20.48
 speed_scale = 9.24
 process_material = SubResource("ParticleProcessMaterial_x7ko8")
 draw_pass_1 = SubResource("SphereMesh_nvf8l")
+
+[node name="Earth" type="MeshInstance3D" parent="." unique_id=1440607139]
+transform = Transform3D(-0.008200801, 0, -0.21183436, 0, 0.21199304, 0, 0.21183436, 0, -0.008200801, -5.543402, -26.633602, -66.07249)
+mesh = ExtResource("5_ubs2n")
+surface_material_override/0 = SubResource("StandardMaterial3D_8o2vv")

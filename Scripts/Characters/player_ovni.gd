@@ -12,7 +12,7 @@ extends CharacterBody3D
 @export var return_speed: float = 8.0
 
 # Boundaries
-@export var x_boundary: float = 18.0
+@export var x_boundary: float = 4.2
 @export var use_boundaries: bool = true
 
 # Particle settings

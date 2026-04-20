@@ -2,6 +2,10 @@ extends Node3D
 
 # References
 @onready var player = $Player
+@onready var earth = $Earth
+
+# Misc spawning
+@export var earth_scale_rate: float = 3
 
 # Enemy spawning
 @export var enemy_scene: PackedScene
@@ -173,6 +177,13 @@ func _process(delta):
 	enemies = enemies.filter(func(enemy): 
 		return is_instance_valid(enemy) and enemy.position.z < 15
 	)
+	
+func _physics_process(delta: float) -> void:
+	if earth.scale.x < 5.0:
+		earth.scale += Vector3(earth_scale_rate / 1000, earth_scale_rate / 1000, earth_scale_rate / 1000)
+		earth.rotate_y(0.001)
+	else:
+		print("Got to the end")
 
 # Debug: Press F3 to show debug info
 func _unhandled_input(event):

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://4o7me02q8qtp"
+path="res://.godot/imported/earth.obj-1cca6cb9ae5e2f412377aff99627b21d.mesh"
+
+[deps]
+
+files=["res://.godot/imported/earth.obj-1cca6cb9ae5e2f412377aff99627b21d.mesh"]
+
+source_file="res://Assets/Models/earth.obj"
+dest_files=["res://.godot/imported/earth.obj-1cca6cb9ae5e2f412377aff99627b21d.mesh", "res://.godot/imported/earth.obj-1cca6cb9ae5e2f412377aff99627b21d.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
