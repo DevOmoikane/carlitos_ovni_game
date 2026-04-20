@@ -3,6 +3,8 @@ extends Node3D
 # References
 @onready var player = $Player
 @onready var earth = $Earth
+@onready var path = $Path3D
+@onready var out_path_follow = $Path3D/PathFollow3D
 
 # Misc spawning
 @export var earth_scale_rate: float = 3
@@ -23,6 +25,8 @@ var enemies: Array = []
 var objects: Array = []
 var spawn_timer: Timer
 var object_timer: Timer
+var out_state: bool = false
+var current_earth_angle: float = 0.0
 
 func _ready():
 	print("Main scene ready - Looking for player...")
@@ -44,12 +48,16 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	print("Mouse captured - Move mouse side to side to control the ship")
 	
+	if earth:
+		earth.global_position = Vector3(-5.54, -26.6, -66.0)
+		earth.global_rotation = Vector3(0.0, -92.2, 0.0)
+		earth.scale = Vector3(0.21, 0.21, 0.21)
 	# Start spawning enemies and objects
 	start_spawning()
 
 func _input(event):
 	# Pass input events to the player
-	if player and player.has_method("handle_input"):
+	if not out_state and player and player.has_method("handle_input"):
 		player.handle_input(event)
 	
 	# Handle Escape key to release/capture mouse
@@ -86,7 +94,7 @@ func start_spawning():
 
 # Add to _spawn_enemy function
 func _spawn_enemy():
-	if not enemy_scene:
+	if not enemy_scene or out_state:
 		return
 		
 	if enemies.size() >= max_enemies:
@@ -106,6 +114,9 @@ func _spawn_enemy():
 		enemy.destroyed.connect(_on_enemy_destroyed.bind(enemy))
 
 func _spawn_object():
+	if out_state:
+		return
+		
 	var object_type = randi() % 3  # 0: powerup, 1: obstacle, 2: collectable
 	
 	var object_instance = null
@@ -179,11 +190,28 @@ func _process(delta):
 	)
 	
 func _physics_process(delta: float) -> void:
-	if earth.scale.x < 5.0:
+	if not out_state and earth.scale.x < 5.0:
 		earth.scale += Vector3(earth_scale_rate / 1000, earth_scale_rate / 1000, earth_scale_rate / 1000)
 		earth.rotate_y(0.001)
-	else:
-		print("Got to the end")
+	elif not out_state and earth.scale.x >= 5.0:
+		out_state = true
+		player.user_movement = false
+		out_path_follow.progress_ratio = 0.0
+		player.global_position = out_path_follow.global_position
+		player.rotation = out_path_follow.rotation
+		current_earth_angle = earth.rotation.y
+	elif out_state:
+		if out_path_follow.progress_ratio < 1.0:
+			out_path_follow.progress_ratio += 0.001
+		if out_path_follow.progress_ratio <= 0.90:
+			earth.rotation.y = lerpf(current_earth_angle, 269.0, 0.1 * delta)
+			player.global_position = out_path_follow.global_position
+			player.rotation = out_path_follow.rotation
+		if out_path_follow.progress_ratio > 0.90:
+			player.global_position = out_path_follow.global_position
+			player.rotation = out_path_follow.rotation
+			var lerp_scale = lerp(1.0, 0.01, 0.1 * delta)
+			player.scale = Vector3(lerp_scale, lerp_scale, lerp_scale)
 
 # Debug: Press F3 to show debug info
 func _unhandled_input(event):

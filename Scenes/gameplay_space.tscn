@@ -35,9 +35,16 @@ height = 0.2
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8o2vv"]
 albedo_texture = ExtResource("6_10nf7")
 
+[sub_resource type="Curve3D" id="Curve3D_ubs2n"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, -7.0845184, 0, 1.1245308, 7.0845184, 0, -1.1245308, 0.5687218, 0, -7.053659, 9.827301, 0, 52.62784, -9.827301, 0, -52.62784, 51.622234, 0, -73.17583, 21.857521, 0, 1.3756409, -21.857521, 0, -1.3756409, -9.601141, 0, -129.71744, -10.049316, 1.487029, -32.86268, 10.049316, -1.487029, 32.86268, -77.487175, 0, -59.50388, -13.835825, 2.11792, -3.7498894, 13.835825, -2.11792, 3.7498894, -39.083076, -5.673828, -13.987911, 0, 0, 0, 0, 0, 0, -4.1993637, -9.560669, -16.339178),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 7
+
 [node name="GameplaySpace" type="Node3D" unique_id=305460067]
 script = ExtResource("1_x7ko8")
-earth_scale_rate = 0.1
+earth_scale_rate = 10.0
 enemy_scene = ExtResource("2_ptpcq")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1214186080]
@@ -57,6 +64,15 @@ process_material = SubResource("ParticleProcessMaterial_x7ko8")
 draw_pass_1 = SubResource("SphereMesh_nvf8l")
 
 [node name="Earth" type="MeshInstance3D" parent="." unique_id=1440607139]
-transform = Transform3D(-0.008200801, 0, -0.21183436, 0, 0.21199304, 0, 0.21183436, 0, -0.008200801, -5.543402, -26.633602, -66.07249)
+transform = Transform3D(-0.08726148, 0, -4.9992385, 0, 5, 0, 4.9992385, 0, -0.08726148, -5.543402, -26.633602, -66.07249)
 mesh = ExtResource("5_ubs2n")
 surface_material_override/0 = SubResource("StandardMaterial3D_8o2vv")
+
+[node name="Path3D" type="Path3D" parent="." unique_id=1851089462]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.7242503)
+curve = SubResource("Curve3D_ubs2n")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Path3D" unique_id=355000098]
+transform = Transform3D(0.67302203, 0, 0.73961544, 0, 0.9999963, 0, -0.73961544, 0, 0.67302203, 0, 0, 0)
+top_level = true
+loop = false

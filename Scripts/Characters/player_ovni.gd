@@ -33,6 +33,8 @@ extends CharacterBody3D
 @export var fire_rate: float = 0.1  # Seconds between shots
 @export var projectile_spawn_offset: Vector3 = Vector3(0, 0.2, -0.5)
 
+@export var user_movement: bool = true
+
 # Add these with other variables
 var can_shoot: bool = true
 var shoot_timer: Timer
@@ -79,6 +81,8 @@ func _ready():
 		
 	# Setup shooting
 	setup_shooting()
+	
+	user_movement = true
 
 func setup_particle_system():
 	# Create particle system if it doesn't exist
@@ -325,6 +329,8 @@ func update_particle_emission():
 			particle_material.initial_velocity_max = particle_speed * 1.5 * (1 + intensity)
 
 func _physics_process(delta):
+	if not user_movement:
+		return
 	# Update mouse stop timer
 	mouse_stop_timer += delta
 	
