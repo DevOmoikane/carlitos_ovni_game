@@ -56,6 +56,20 @@ func _ready():
 	# Start spawning enemies and objects
 	start_spawning()
 
+	# Connect to player's respawn signal to restore health/UI
+	if player:
+		if player.has_signal("respawned"):
+			player.respawned.connect(_on_player_respawned)
+
+	# Update initial UI values
+	update_score_display()
+	# Initialize health bar if present
+	if has_node("UI/Control/HealthBar"):
+		$UI/Control/HealthBar.max_value = health
+		$UI/Control/HealthBar.value = health
+	else:
+		update_health_display()
+
 func _input(event):
 	# Pass input events to the player
 	if not out_state and player and player.has_method("handle_input"):
@@ -160,15 +174,37 @@ func _on_enemy_destroyed(enemy):
 
 func _on_enemy_hit_player(enemy):
 	health -= 20
+	# Update UI
+	update_health_display()
 	if health <= 0:
-		print("died")
-		
+		# Trigger player's death/respawn animation
+		if player and player.has_method("play_death_animation"):
+			player.play_death_animation()
+		else:
+			print("died")
 func update_score_display():
 	# Update UI if you have one
-	if has_node("UI/ScoreLabel"):
-		$UI/ScoreLabel.text = "Score: " + str(score)
+	if has_node("UI/Control/ScoreLabel"):
+		$UI/Control/ScoreLabel.text = "Score: " + str(score)
 	else:
 		print("Score: ", score)  # Debug output
+
+func update_health_display():
+	# Update UI health label if present
+	# If using HealthBar, set value; fallback to label if missing
+	if has_node("UI/Control/HealthBar"):
+		$UI/Control/HealthBar.value = health
+	elif has_node("UI/Control/HealthLabel"):
+		$UI/Control/HealthLabel.text = "Health: " + str(health)
+	else:
+		print("Health: ", health)
+
+
+func _on_player_respawned():
+	# Reset health and update UI when player respawns
+	health = 300
+	update_health_display()
+	print("Player respawned - health restored")
 
 func _process(delta):
 	if not player:
@@ -207,14 +243,19 @@ func _physics_process(delta: float) -> void:
 		out_path_follow.progress_ratio = 0.0
 		player.global_position = out_path_follow.global_position
 		player.rotation = out_path_follow.rotation
+		# store current earth rotation (radians)
 		current_earth_angle = earth.rotation.y
 	elif out_state:
+		# Advance along the path at a delta-based speed (frame-rate independent)
+		var target_rad2 = deg_to_rad(269.0)
+		earth.rotation.y = lerp_angle(earth.rotation.y, target_rad2, 2.0 * delta)
 		if out_path_follow.progress_ratio < 1.0:
-			out_path_follow.progress_ratio += 0.001
+			out_path_follow.progress_ratio += 0.3 * delta
+		# During most of the path, smoothly rotate earth toward 269 degrees
 		if out_path_follow.progress_ratio <= 0.90:
-			earth.rotation.y = lerpf(current_earth_angle, 269.0, 0.1 * delta)
 			player.global_position = out_path_follow.global_position
 			player.rotation = out_path_follow.rotation
+		# Final approach: continue rotating and shrink player
 		if out_path_follow.progress_ratio > 0.90:
 			player.global_position = out_path_follow.global_position
 			player.rotation = out_path_follow.rotation

@@ -44,8 +44,3 @@ transform = Transform3D(-0.97615993, 0, 0.21705304, 0, 1, 0, -0.21705304, 0, -0.
 amount = 16
 process_material = SubResource("ParticleProcessMaterial_xlg88")
 draw_pass_1 = SubResource("SphereMesh_qcola")
-
-[node name="Area3D" type="Area3D" parent="." unique_id=582018506]
-
-[node name="collisionShape" type="CollisionShape3D" parent="Area3D" unique_id=175431691]
-shape = SubResource("SphereShape3D_2h4j0")

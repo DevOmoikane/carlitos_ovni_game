@@ -44,7 +44,7 @@ point_count = 7
 
 [node name="GameplaySpace" type="Node3D" unique_id=305460067]
 script = ExtResource("1_x7ko8")
-earth_scale_rate = 0.5
+earth_scale_rate = 5.0
 enemy_scene = ExtResource("2_ptpcq")
 spawn_timer_duration = 0.5
 max_enemies = 30
@@ -78,3 +78,34 @@ curve = SubResource("Curve3D_ubs2n")
 transform = Transform3D(0.67302203, 0, 0.73961544, 0, 0.9999963, 0, -0.73961544, 0, 0.67302203, 0, 0, 0)
 top_level = true
 loop = false
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=999999001]
+
+[node name="Control" type="Control" parent="UI" unique_id=999999002]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="UI/Control" unique_id=999999003]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -129.0
+offset_top = 17.0
+offset_right = -68.0
+offset_bottom = 40.0
+grow_horizontal = 0
+text = "Score: 0"
+
+[node name="HealthBar" type="ProgressBar" parent="UI/Control" unique_id=999999004]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 12.0
+offset_right = 200.0
+offset_bottom = 36.0
+max_value = 300.0
+value = 300.0

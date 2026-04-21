@@ -1,5 +1,9 @@
 extends CharacterBody3D
 
+signal respawned
+
+const texture = preload("res://Assets/Textures/pewpew.png")
+
 # Movement settings
 @export var max_speed: float = 15.0
 @export var acceleration: float = 8.0
@@ -35,6 +39,11 @@ extends CharacterBody3D
 
 @export var user_movement: bool = true
 
+# Death / respawn
+var is_dead: bool = false
+var respawn_position: Vector3 = Vector3(0, 0, -2.7835054)
+var respawn_delay: float = 1.2
+
 # Add these with other variables
 var can_shoot: bool = true
 var shoot_timer: Timer
@@ -55,7 +64,6 @@ var mouse_stop_timer: float = 0.0
 @onready var left_light: OmniLight3D = $mesh/LeftLight
 @onready var right_light: OmniLight3D = $mesh/RightLight
 @onready var blink_timer: Timer = $BlinkTimer
-@onready var collision_area: Area3D = $Area3D
 
 # Particle system references
 var particle_material: ParticleProcessMaterial
@@ -64,7 +72,6 @@ func _ready():
 	print("Spaceship ready with effects!")
 	
 	add_to_group("player")
-	#collision_area.add_to_group("player")
 	
 	# Setup particle system
 	setup_particle_system()
@@ -85,6 +92,10 @@ func _ready():
 	setup_shooting()
 	
 	user_movement = true
+
+	# Ensure collision shape is enabled at start
+	if collision_shape:
+		collision_shape.disabled = false
 
 func setup_particle_system():
 	# Create particle system if it doesn't exist
@@ -244,7 +255,7 @@ func handle_input(event):
 		update_particle_emission()
 		
 	# Handle shooting with left mouse button
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT  or event is InputEventKey and Input.is_key_pressed(KEY_SPACE):
 		shoot()
 
 # Add new shooting functions
@@ -277,10 +288,9 @@ func shoot():
 	
 	# Play shooting effect
 	create_shoot_effect()
-	create_bubble_effect("pewpew.png", 0.3)
+	create_bubble_effect(0.3)
 
-func create_bubble_effect(image_path: String, duration: float):
-	var texture = load("res://Assets/Textures/" + image_path)
+func create_bubble_effect(duration: float):
 	if not texture:
 		return
 	
@@ -331,6 +341,14 @@ func update_particle_emission():
 			particle_material.initial_velocity_max = particle_speed * 1.5 * (1 + intensity)
 
 func _physics_process(delta):
+	# If dead, play simple falling/spin behaviour and ignore normal controls
+	if is_dead:
+		# Rotate mesh uncontrollably on Z and move downwards
+		if mesh_instance:
+			mesh_instance.rotation.z += deg_to_rad(720) * delta * 0.25 * randf()
+		# Apply small downward movement for the body
+		translate(Vector3(0, -4.0 * delta, 0))
+		return
 	if not user_movement:
 		return
 	# Update mouse stop timer
@@ -380,6 +398,54 @@ func _physics_process(delta):
 	
 	# Update particle system position to follow ship's movement
 	update_effects(delta)
+
+
+func play_death_animation():
+	if is_dead:
+		return
+	is_dead = true
+	user_movement = false
+	# Disable collision to avoid further hits
+	if collision_shape:
+		collision_shape.disabled = true
+
+	# Start a simple async sequence: spin + fall, then respawn
+	spawn_death_sequence()
+
+
+func spawn_death_sequence() -> void:
+	# Non-blocking: animate for respawn_delay seconds then respawn
+	var t = 0.0
+	while t < respawn_delay:
+		# increase visible spin on mesh
+		if mesh_instance:
+			mesh_instance.rotation.z += deg_to_rad(1080) * get_process_delta_time() * (0.5 + randf())
+			# optionally tilt forward
+			mesh_instance.rotation.x = lerp(mesh_instance.rotation.x, deg_to_rad(60), 0.1)
+		await get_tree().process_frame
+		t += get_process_delta_time()
+
+	# After animation, perform respawn
+	_do_respawn()
+
+
+func _do_respawn():
+	# Reset control and state
+	is_dead = false
+	user_movement = true
+	# Re-enable collision
+	if collision_shape:
+		collision_shape.disabled = false
+	# Reset physics and position
+	velocity = Vector3.ZERO
+	global_position = respawn_position
+	rotation = Vector3(0.0, 167.5, 0.0)
+	if mesh_instance:
+		mesh_instance.rotation = Vector3(0.0, 167.5, 0.0)
+
+	# Notify listeners (scene) that player respawned
+	if has_signal("respawned"):
+		emit_signal("respawned")
 
 func update_effects(delta):
 	# Update particle emission based on movement
