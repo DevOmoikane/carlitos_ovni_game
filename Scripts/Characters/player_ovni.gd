@@ -439,9 +439,9 @@ func _do_respawn():
 	# Reset physics and position
 	velocity = Vector3.ZERO
 	global_position = respawn_position
-	rotation = Vector3(0.0, 167.5, 0.0)
+	rotation = Vector3.ZERO
 	if mesh_instance:
-		mesh_instance.rotation = Vector3(0.0, 167.5, 0.0)
+		mesh_instance.rotation = Vector3(0.0, deg_to_rad(167.5), 0.0)
 
 	# Notify listeners (scene) that player respawned
 	if has_signal("respawned"):

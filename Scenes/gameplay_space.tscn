@@ -44,7 +44,7 @@ point_count = 7
 
 [node name="GameplaySpace" type="Node3D" unique_id=305460067]
 script = ExtResource("1_x7ko8")
-earth_scale_rate = 5.0
+earth_scale_rate = 0.1
 enemy_scene = ExtResource("2_ptpcq")
 spawn_timer_duration = 0.5
 max_enemies = 30

@@ -124,7 +124,6 @@ func create_explosion():
 	explosion.queue_free()
 
 func _on_collision(collider):
-	print("collider: ", collider)
 	if collider.is_in_group("player"):
 		if has_signal("hit_player"):
 			emit_signal("hit_player")
